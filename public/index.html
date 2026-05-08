@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ไพ่ Lenormand — ความหมายไพ่ทั้ง 36 ใบ</title>
+<meta name="description" content="ถอดรหัสชะตาผ่านไพ่เลอโนมองด์ กับลี เลอโนมองด์ นักพยากรณ์ผู้เชี่ยวชาญ">
+<meta name="apple-mobile-web-app-title" content="ถอดรหัสชะตาผ่านไพ่เลอโนมองด์">
+<meta property="og:title" content="ถอดรหัสชะตาผ่านไพ่เลอโนมองด์">
+<meta property="og:description" content="เปิดไพ่ Lenormand กับลี เลอโนมองด์ คำทำนายที่แม่นยำและลึกซึ้ง">
+<title>ถอดรหัสชะตาผ่านไพ่เลอโนมองด์ — Lee Lenormand</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -109,6 +113,10 @@ header h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,3.5re
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--card-border);border-radius:4px}
 .result-count{position:relative;z-index:10;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--muted);padding-top:20px}
 footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-top:1px solid rgba(201,168,76,.1);font-size:.8rem;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic}
+
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);filter:drop-shadow(0 0 8px rgba(201,168,76,.4))}50%{transform:translateY(-10px) scale(1.05);filter:drop-shadow(0 0 20px rgba(201,168,76,.8))}}
+@keyframes starPulse{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2);color:#e8cc80}}
+@keyframes textFade{0%,100%{opacity:.6}50%{opacity:1}}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @media(max-width:768px){.nav-menu{display:none}.nav-hamburger{display:flex}}
 @media(max-width:600px){.cards-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:30px 14px 60px}.modal-header{flex-direction:column;padding:24px}.modal-body{padding:20px 24px 24px}.aspects-grid{grid-column:1/-1;grid-template-columns:1fr}.modal-card-icon{width:70px;height:105px}}
@@ -118,7 +126,7 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
 <body>
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
-  <a class="nav-brand" href="#" onclick="showPage('cards');return false;">
+  <a class="nav-brand" href="#" onclick="showPage('draw');return false;">
     <svg class="nav-brand-icon" viewBox="0 0 32 32" fill="none">
       <rect x="2" y="2" width="28" height="28" rx="3" fill="none" stroke="#c9a84c" stroke-width="1"/>
       <rect x="5" y="5" width="22" height="22" rx="1" fill="none" stroke="#c9a84c" stroke-width="0.4" opacity="0.5"/>
@@ -133,8 +141,8 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
     <span class="nav-brand-name">Lee <span>·</span> Lenormand</span>
   </a>
   <div class="nav-menu">
-    <a class="nav-item active" id="nav-cards" onclick="showPage('cards');return false;" href="#">✦ ไพ่ทั้งหมด</a>
-    <a class="nav-item" id="nav-draw" onclick="showPage('draw');return false;" href="#">สุ่มไพ่</a>
+    <a class="nav-item" id="nav-cards" onclick="showPage('cards');return false;" href="#">✦ ไพ่ทั้งหมด</a>
+    <a class="nav-item active" id="nav-draw" onclick="showPage('draw');return false;" href="#">สุ่มไพ่</a>
     <a class="nav-item" id="nav-about" onclick="showPage('about');return false;" href="#">ประวัติไพ่ Lenormand</a>
     <a class="nav-item" id="nav-blog" onclick="showPage('blog');return false;" href="#">ดูดวงกับอาจารย์ลี</a>
     <div class="nav-divider"></div>
@@ -155,25 +163,8 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
   <button class="nav-cta" onclick="showPage('draw');closeDrawer();">🔮 ดูดวงเลย</button>
 </div>
 
-<!-- ── PAGE: CARDS ── -->
-<div class="page-section active" id="page-cards">
-<header>
-  <span class="header-ornament">✦ ✦ ✦</span>
-  <h1>Lenormand</h1>
-  <p class="subtitle">ความหมายไพ่ทั้ง 36 ใบ — คู่มือนักพยากรณ์</p>
-  <div class="header-divider"><span>✦</span></div>
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="ค้นหาไพ่... เช่น หัวใจ, ดาว, ต้นไม้">
-  </div>
-  <div class="filter-wrap" id="filterWrap"></div>
-</header>
-<p class="result-count" id="resultCount">แสดง 36 ใบ</p>
-<div class="cards-grid" id="cardsGrid"></div>
-</div>
-
 <!-- ── PAGE: DRAW ── -->
-<div class="page-section" id="page-draw">
+<div class="page-section active" id="page-draw">
 <div style="max-width:700px;margin:0 auto;padding:72px 24px 80px;position:relative;z-index:10">
 
   <!-- Header -->
@@ -190,7 +181,11 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
       <!-- DOB -->
       <div>
         <label style="display:block;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px">วันเดือนปีเกิด</label>
-        <input type="date" id="inputDOB" style="width:100%;padding:13px 18px;background:rgba(20,8,8,.7);border:1px solid rgba(201,168,76,.25);border-radius:10px;color:var(--cream);font-family:'Sarabun',sans-serif;font-size:.95rem;outline:none;transition:border-color .25s;color-scheme:dark" onfocus="this.style.borderColor='rgba(201,168,76,.6)'" onblur="this.style.borderColor='rgba(201,168,76,.25)'" />
+        <div style="display:flex;gap:8px">
+          <select id="dobDay" style="flex:1;padding:13px 8px;background:rgba(20,8,8,.7);border:1px solid rgba(201,168,76,.25);border-radius:10px;color:var(--cream);font-family:'Sarabun',sans-serif;font-size:.9rem;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer" onfocus="this.style.borderColor='rgba(201,168,76,.6)'" onblur="this.style.borderColor='rgba(201,168,76,.25)'"><option value="">วัน</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
+          <select id="dobMonth" style="flex:1;padding:13px 8px;background:rgba(20,8,8,.7);border:1px solid rgba(201,168,76,.25);border-radius:10px;color:var(--cream);font-family:'Sarabun',sans-serif;font-size:.9rem;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer" onfocus="this.style.borderColor='rgba(201,168,76,.6)'" onblur="this.style.borderColor='rgba(201,168,76,.25)'"><option value="">เดือน</option><option value="1">มกราคม</option><option value="2">กุมภาพันธ์</option><option value="3">มีนาคม</option><option value="4">เมษายน</option><option value="5">พฤษภาคม</option><option value="6">มิถุนายน</option><option value="7">กรกฎาคม</option><option value="8">สิงหาคม</option><option value="9">กันยายน</option><option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option></select>
+          <select id="dobYear" style="flex:1;padding:13px 8px;background:rgba(20,8,8,.7);border:1px solid rgba(201,168,76,.25);border-radius:10px;color:var(--cream);font-family:'Sarabun',sans-serif;font-size:.9rem;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;flex:1.5" onfocus="this.style.borderColor='rgba(201,168,76,.6)'" onblur="this.style.borderColor='rgba(201,168,76,.25)'"><option value="">ปีเกิด</option><option value="2010">2553 (2010)</option><option value="2009">2552 (2009)</option><option value="2008">2551 (2008)</option><option value="2007">2550 (2007)</option><option value="2006">2549 (2006)</option><option value="2005">2548 (2005)</option><option value="2004">2547 (2004)</option><option value="2003">2546 (2003)</option><option value="2002">2545 (2002)</option><option value="2001">2544 (2001)</option><option value="2000">2543 (2000)</option><option value="1999">2542 (1999)</option><option value="1998">2541 (1998)</option><option value="1997">2540 (1997)</option><option value="1996">2539 (1996)</option><option value="1995">2538 (1995)</option><option value="1994">2537 (1994)</option><option value="1993">2536 (1993)</option><option value="1992">2535 (1992)</option><option value="1991">2534 (1991)</option><option value="1990">2533 (1990)</option><option value="1989">2532 (1989)</option><option value="1988">2531 (1988)</option><option value="1987">2530 (1987)</option><option value="1986">2529 (1986)</option><option value="1985">2528 (1985)</option><option value="1984">2527 (1984)</option><option value="1983">2526 (1983)</option><option value="1982">2525 (1982)</option><option value="1981">2524 (1981)</option><option value="1980">2523 (1980)</option><option value="1979">2522 (1979)</option><option value="1978">2521 (1978)</option><option value="1977">2520 (1977)</option><option value="1976">2519 (1976)</option><option value="1975">2518 (1975)</option><option value="1974">2517 (1974)</option><option value="1973">2516 (1973)</option><option value="1972">2515 (1972)</option><option value="1971">2514 (1971)</option><option value="1970">2513 (1970)</option><option value="1969">2512 (1969)</option><option value="1968">2511 (1968)</option><option value="1967">2510 (1967)</option><option value="1966">2509 (1966)</option><option value="1965">2508 (1965)</option><option value="1964">2507 (1964)</option><option value="1963">2506 (1963)</option><option value="1962">2505 (1962)</option><option value="1961">2504 (1961)</option><option value="1960">2503 (1960)</option><option value="1959">2502 (1959)</option><option value="1958">2501 (1958)</option><option value="1957">2500 (1957)</option><option value="1956">2499 (1956)</option><option value="1955">2498 (1955)</option><option value="1954">2497 (1954)</option><option value="1953">2496 (1953)</option><option value="1952">2495 (1952)</option><option value="1951">2494 (1951)</option><option value="1950">2493 (1950)</option><option value="1949">2492 (1949)</option><option value="1948">2491 (1948)</option><option value="1947">2490 (1947)</option><option value="1946">2489 (1946)</option><option value="1945">2488 (1945)</option><option value="1944">2487 (1944)</option><option value="1943">2486 (1943)</option><option value="1942">2485 (1942)</option><option value="1941">2484 (1941)</option><option value="1940">2483 (1940)</option></select>
+        </div>
       </div>
 
       <!-- Birth time -->
@@ -248,9 +243,16 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
     <div style="border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:32px;background:rgba(30,12,12,.55);backdrop-filter:blur(10px)">
       <p style="font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px">✦ คำทำนาย</p>
       <div id="predictionText" style="font-family:'Sarabun',sans-serif;font-size:.97rem;line-height:2;color:var(--text)">
-        <div style="display:flex;align-items:center;gap:12px;color:var(--muted)">
-          <span style="display:inline-block;animation:spin 1.2s linear infinite;font-size:1.1rem">✦</span>
-          <span style="font-family:'Cormorant Garamond',serif;font-style:italic">กำลังอ่านพลังงานของคุณ...</span>
+        <div id="loadingSpinner" style="text-align:center;padding:20px 0">
+          <div style="font-size:2.5rem;margin-bottom:16px;animation:orbFloat 2s ease-in-out infinite">🔮</div>
+          <div style="display:flex;justify-content:center;gap:8px;margin-bottom:14px">
+            <span style="font-size:1.2rem;animation:starPulse 1.5s ease-in-out infinite;animation-delay:0s">✦</span>
+            <span style="font-size:1.2rem;animation:starPulse 1.5s ease-in-out infinite;animation-delay:.3s">✦</span>
+            <span style="font-size:1.2rem;animation:starPulse 1.5s ease-in-out infinite;animation-delay:.6s">✦</span>
+            <span style="font-size:1.2rem;animation:starPulse 1.5s ease-in-out infinite;animation-delay:.9s">✦</span>
+            <span style="font-size:1.2rem;animation:starPulse 1.5s ease-in-out infinite;animation-delay:1.2s">✦</span>
+          </div>
+          <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--gold);animation:textFade 2s ease-in-out infinite" id="loadingText">ดวงดาวกำลังเรียงตัว...</p>
         </div>
       </div>
     </div>
@@ -262,7 +264,7 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
       <p style="font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px">✦ อยากรู้ลึกขึ้น?</p>
       <h4 style="font-family:'Cinzel Decorative',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:8px">เปิดไพ่ 5 ใบ — รายละเอียดเต็ม</h4>
       <p style="font-size:.88rem;color:var(--muted);line-height:1.6;margin-bottom:20px">เพิ่มอีก 2 ใบ เจาะลึกความท้าทายและคำแนะนำที่ซ่อนอยู่<br>พร้อมคำทำนายละเอียดจากอาจารย์ลี</p>
-      <button onclick="openPaymentModal()" style="padding:14px 36px;background:linear-gradient(135deg,rgba(201,168,76,.28),rgba(201,168,76,.12));border:1px solid rgba(201,168,76,.55);border-radius:30px;font-family:'Sarabun',sans-serif;font-size:1rem;color:var(--gold2);cursor:pointer;letter-spacing:.04em;transition:all .3s;box-shadow:0 0 20px rgba(201,168,76,.1)" onmouseover="this.style.background='linear-gradient(135deg,rgba(201,168,76,.45),rgba(201,168,76,.25))';this.style.boxShadow='0 0 30px rgba(201,168,76,.25)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(201,168,76,.28),rgba(201,168,76,.12))';this.style.boxShadow='0 0 20px rgba(201,168,76,.1)'">
+      <button id="btnPay" onclick="openPaymentModal()" style="padding:14px 36px;background:linear-gradient(135deg,rgba(201,168,76,.28),rgba(201,168,76,.12));border:1px solid rgba(201,168,76,.55);border-radius:30px;font-family:'Sarabun',sans-serif;font-size:1rem;color:var(--gold2);cursor:pointer;letter-spacing:.04em;transition:all .3s;box-shadow:0 0 20px rgba(201,168,76,.1)" onmouseover="this.style.background='linear-gradient(135deg,rgba(201,168,76,.45),rgba(201,168,76,.25))';this.style.boxShadow='0 0 30px rgba(201,168,76,.25)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(201,168,76,.28),rgba(201,168,76,.12))';this.style.boxShadow='0 0 20px rgba(201,168,76,.1)'">
         🔮 ดูละเอียดขึ้น — <strong>99 บาท</strong>
       </button>
     </div>
@@ -318,6 +320,23 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
     </button>
     <button onclick="closePaymentModal()" style="width:100%;padding:11px;background:transparent;border:1px solid rgba(255,255,255,.08);border-radius:30px;font-family:'Sarabun',sans-serif;font-size:.88rem;color:var(--muted);cursor:pointer">ยกเลิก</button>
   </div>
+</div>
+
+<!-- ── PAGE: CARDS ── -->
+<div class="page-section" id="page-cards">
+<header>
+  <span class="header-ornament">✦ ✦ ✦</span>
+  <h1>Lenormand</h1>
+  <p class="subtitle">ความหมายไพ่ทั้ง 36 ใบ — คู่มือนักพยากรณ์</p>
+  <div class="header-divider"><span>✦</span></div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="ค้นหาไพ่... เช่น หัวใจ, ดาว, ต้นไม้">
+  </div>
+  <div class="filter-wrap" id="filterWrap"></div>
+</header>
+<p class="result-count" id="resultCount">แสดง 36 ใบ</p>
+<div class="cards-grid" id="cardsGrid"></div>
 </div>
 
 <!-- ── PAGE: ABOUT ── -->
@@ -759,6 +778,7 @@ function closeModal() {
 document.addEventListener('DOMContentLoaded', function() {
   renderFilters();
   renderCards();
+  checkStripePayment();
   document.getElementById('closeBtn').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', function(e) {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
@@ -772,6 +792,100 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
 });
 
+
+// Loading messages rotation
+var _loadingMessages = [
+  'ดวงดาวกำลังเรียงตัว...',
+  'พลังงานจักรวาลกำลังรวมตัว...',
+  'ไพ่กำลังเปิดเผยความจริง...',
+  'ลี เลอโนมองด์กำลังอ่านชะตา...',
+  'สัญญาณจากจักรวาลกำลังมา...',
+  'พลังงานแห่งวันเกิดกำลังตื่น...',
+];
+var _loadingInterval = null;
+function startLoadingMessages() {
+  var i = 0;
+  var el = document.getElementById('loadingText');
+  if (!el) return;
+  _loadingInterval = setInterval(function() {
+    i = (i + 1) % _loadingMessages.length;
+    if (el) el.textContent = _loadingMessages[i];
+  }, 2000);
+}
+function stopLoadingMessages() {
+  if (_loadingInterval) { clearInterval(_loadingInterval); _loadingInterval = null; }
+}
+
+// ── CHECK STRIPE PAYMENT ON LOAD ──────────────
+async function checkStripePayment() {
+  var params = new URLSearchParams(window.location.search);
+  var sessionId = params.get('session_id');
+  var cardsParam = params.get('cards');
+  var infoParam = params.get('info');
+  if (!sessionId) return;
+  try {
+    var res = await fetch('/.netlify/functions/verify-payment?session_id=' + sessionId);
+    var data = await res.json();
+    if (data.paid) {
+      var cardIds = cardsParam ? JSON.parse(decodeURIComponent(cardsParam)) : [];
+      var userInfo = infoParam ? JSON.parse(decodeURIComponent(infoParam)) : {};
+      window._userInfo = userInfo;
+      var picked3 = cardIds.map(function(id){ return CARDS.find(function(c){ return c.id===id; }); }).filter(Boolean);
+      window._pickedCards = picked3;
+      showPage('draw');
+      document.getElementById('drawForm').style.display = 'none';
+      document.getElementById('drawResultWrap').style.display = 'block';
+      var labels = ['อดีต','ปัจจุบัน','อนาคต'];
+      document.getElementById('drawCards3').innerHTML = picked3.map(function(c,i){
+        return '<div style="display:flex;flex-direction:column;align-items:center;gap:10px">'
+          + '<p style="font-family:\'Cormorant Garamond\',serif;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim)">'+labels[i]+'</p>'
+          + '<div style="width:110px;height:176px;border-radius:8px;overflow:hidden;cursor:pointer" onclick="openModal('+c.id+')">'+(SVGS[c.id]||'')+'</div>'
+          + '<p style="font-family:\'Cinzel Decorative\',serif;font-size:.72rem;color:var(--gold2);text-align:center;max-width:110px">'+c.nameTH+'</p>'
+          + '</div>';
+      }).join('');
+      document.getElementById('predictionText').innerHTML = '<span style="color:var(--gold)">✅ ชำระเงินสำเร็จ</span>';
+      setTimeout(function(){ confirmPaymentDirect(picked3, userInfo); }, 800);
+      window.history.replaceState({}, '', '/');
+    }
+  } catch(err) { console.error('Payment check error:', err); }
+}
+
+async function confirmPaymentDirect(picked3, info) {
+  document.getElementById('upsellSection').style.display = 'none';
+  var deepSection = document.getElementById('deepReadingSection');
+  deepSection.style.display = 'block';
+  deepSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  var usedIds = picked3.map(function(c){ return c.id; });
+  var extra2 = CARDS.filter(function(c){ return usedIds.indexOf(c.id)===-1; }).sort(function(){ return Math.random()-.5; }).slice(0,2);
+  var all5 = picked3.concat(extra2);
+  var labels5 = ['อดีต','ปัจจุบัน','อนาคต','ความท้าทาย','คำแนะนำ'];
+  document.getElementById('deepCards5').innerHTML = all5.map(function(c,i){
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:8px">'
+      + '<p style="font-family:\'Cormorant Garamond\',serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim)">'+labels5[i]+'</p>'
+      + '<div style="width:96px;height:154px;border-radius:7px;overflow:hidden;cursor:pointer" onclick="openModal('+c.id+')">'+(SVGS[c.id]||'')+'</div>'
+      + '<p style="font-family:\'Cinzel Decorative\',serif;font-size:.65rem;color:var(--gold2);text-align:center;max-width:96px">'+c.nameTH+'</p>'
+      + '</div>';
+  }).join('');
+  var cardDesc = all5.map(function(c,i){ return labels5[i]+': '+c.nameTH+' ('+c.nameEN+') — '+c.meaning; }).join('\n');
+  var prompt = 'คุณคือ ลี เลอโนมองด์ (Lee Lenormand) นักพยากรณ์ผู้เชี่ยวชาญไพ่ Lenormand ลึกลับและแม่นยำ\n\n'
+    + 'วันเกิด: '+(info.dob||'')+'\nเวลา: '+(info.time||'ไม่ทราบ')+'\nเพศ: '+(info.gender||'')+'\nคำถาม: '+(info.question||'ไม่มี')
+    + '\n\nไพ่ทั้ง 5 ใบ:\n'+cardDesc
+    + '\n\nเขียนคำทำนายเชิงลึกภาษาไทย ราว 300 คำ วิเคราะห์ไพ่แต่ละใบ เชื่อมพลังงานวันเกิด ให้คำแนะนำปฏิบัติ และปิดด้วยกำลังใจ';
+  var predEl = document.getElementById('deepPredictionText');
+  predEl.innerHTML = '<div style="text-align:center;padding:20px"><div style="font-size:2rem;animation:orbFloat 2s ease-in-out infinite">🔮</div><p style="font-family:\'Cormorant Garamond\',serif;font-style:italic;color:var(--gold);margin-top:10px">กำลังอ่านลึก...</p></div>';
+  try {
+    var r2 = await fetch('/.netlify/functions/claude-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+    });
+    var d2 = await r2.json();
+    var deepText = d2.content && d2.content[0] ? d2.content[0].text : '';
+    predEl.innerHTML = '';
+    if (!deepText) { predEl.innerHTML = '<span style="color:var(--muted)">ไม่สามารถเชื่อมต่อได้</span>'; return; }
+    var i2=0; var t2=setInterval(function(){ if(i2<deepText.length){predEl.innerHTML=deepText.slice(0,i2+1).replace(/\n/g,'<br>');i2++;}else clearInterval(t2); },14);
+  } catch(e){ predEl.innerHTML='<span style="color:var(--muted)">เกิดข้อผิดพลาด: '+e.message+'</span>'; }
+}
 // ── PAGE NAVIGATION ──────────────────────────
 function showPage(page) {
   var pages = ['cards','draw','about','blog','contact'];
@@ -832,15 +946,18 @@ function resetDraw() {
 
 // ── MAIN READING ──────────────────────────────
 async function startReading() {
-  var dob      = document.getElementById('inputDOB').value;
+  var dobDay   = document.getElementById('dobDay').value;
+  var dobMonth = document.getElementById('dobMonth').value;
+  var dobYear  = document.getElementById('dobYear').value;
+  var dob      = dobYear && dobMonth && dobDay ? dobYear + '-' + String(dobMonth).padStart(2,'0') + '-' + String(dobDay).padStart(2,'0') : '';
   var time     = document.getElementById('inputTime').value;
   var question = document.getElementById('inputQuestion').value.trim();
 
   if (!dob) {
-    var dobEl = document.getElementById('inputDOB');
-    dobEl.style.borderColor = 'rgba(220,80,80,.8)';
-    setTimeout(function(){ dobEl.style.borderColor = 'rgba(201,168,76,.25)'; }, 2000);
-    return;
+    ['dobDay','dobMonth','dobYear'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el.value){el.style.borderColor='rgba(220,80,80,.8)';setTimeout(function(){el.style.borderColor='rgba(201,168,76,.25)';},2000);}
+    }); return;
   }
   if (!selectedGender) { alert('กรุณาเลือกเพศ'); return; }
 
@@ -877,7 +994,8 @@ async function startReading() {
     + '\n\nเขียนคำทำนายภาษาไทยที่ลึกซึ้งและตรงไปตรงมา ราว 150-200 คำ เชื่อมพลังงานวันเกิดกับไพ่ทั้ง 3 ใบ อธิบายแต่ละใบ (อดีต/ปัจจุบัน/อนาคต) แล้วสรุปคำแนะนำ';
 
   var predEl = document.getElementById('predictionText');
-  predEl.innerHTML = '';
+  predEl.innerHTML = document.getElementById('loadingSpinner') ? document.getElementById('loadingSpinner').outerHTML : '';
+  startLoadingMessages();
 
   try {
     var response = await fetch('/.netlify/functions/claude-proxy', {
@@ -891,6 +1009,7 @@ async function startReading() {
     });
     const resp1 = await response.json();
     const fullText = resp1.content && resp1.content[0] ? resp1.content[0].text : '';
+    stopLoadingMessages();
     if (!fullText) {
       predEl.innerHTML = '<span style=\'color:var(--muted)\'>ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่</span>';
     } else {
@@ -927,25 +1046,28 @@ function buildPromptPayPayload(phone, amount) {
   return body + (crc & 0xFFFF).toString(16).toUpperCase().padStart(4,'0');
 }
 
-var qrInstance = null;
-function openPaymentModal() {
-  document.getElementById('paymentModal').style.display = 'flex';
-  var payload = buildPromptPayPayload(PROMPTPAY_NUMBER, 99);
-  var canvas  = document.getElementById('qrCanvas');
+async function openPaymentModal() {
+  var btn = document.getElementById('btnPay');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ กำลังเชื่อมต่อ...'; }
   try {
-    if (qrInstance) qrInstance.clear();
-    qrInstance = new QRCode(canvas, {
-      text: payload, width: 180, height: 180,
-      colorDark: '#1a0f2e', colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
+    var picked3 = window._pickedCards || [];
+    var userInfo = window._userInfo || {};
+    var cardIds = picked3.map(function(c){ return c.id; });
+    var res = await fetch('/.netlify/functions/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cardIds: cardIds, userInfo: userInfo })
     });
-  } catch(e) {
-    var ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,180,180);
-    ctx.fillStyle = '#333'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('PromptPay', 90, 80);
-    ctx.fillText(PROMPTPAY_NUMBER, 90, 100);
-    ctx.fillText('99 THB', 90, 120);
+    var data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('เกิดข้อผิดพลาด: ' + (data.error || 'ไม่สามารถเชื่อมต่อได้'));
+      if (btn) { btn.disabled = false; btn.textContent = '🔮 ดูละเอียดขึ้น — 99 บาท'; }
+    }
+  } catch(err) {
+    alert('เกิดข้อผิดพลาด: ' + err.message);
+    if (btn) { btn.disabled = false; btn.textContent = '🔮 ดูละเอียดขึ้น — 99 บาท'; }
   }
 }
 
