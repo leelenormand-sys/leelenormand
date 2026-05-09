@@ -13,7 +13,7 @@ exports.handler = async (event) => {
 
   try {
     const { cardIds, userInfo } = JSON.parse(event.body || '{}');
-    const origin = event.headers.origin || 'https://www.leelenormand.com';
+    const origin = 'https://www.leelenormand.com';
 
     console.log('Creating checkout session, cardIds:', cardIds);
 
@@ -31,7 +31,7 @@ exports.handler = async (event) => {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${origin}/?session_id={CHECKOUT_SESSION_ID}&cards=${encodeURIComponent(JSON.stringify(cardIds || []))}&info=${encodeURIComponent(JSON.stringify(userInfo || {}))}`,
+      success_url: `https://www.leelenormand.com/?session_id={CHECKOUT_SESSION_ID}&cards=${encodeURIComponent(JSON.stringify(cardIds || []))}&info=${encodeURIComponent(JSON.stringify(userInfo || {}))}`,
       cancel_url: `${origin}/?cancelled=true`,
     });
 
