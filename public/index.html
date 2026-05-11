@@ -823,31 +823,53 @@ async function checkStripePayment() {
   var cardsParam = params.get('cards');
   var infoParam = params.get('info');
   if (!sessionId) return;
+
   try {
     var res = await fetch('/.netlify/functions/verify-payment?session_id=' + sessionId);
     var data = await res.json();
+
     if (data.paid) {
       var cardIds = cardsParam ? JSON.parse(decodeURIComponent(cardsParam)) : [];
       var userInfo = infoParam ? JSON.parse(decodeURIComponent(infoParam)) : {};
       window._userInfo = userInfo;
       var picked3 = cardIds.map(function(id){ return CARDS.find(function(c){ return c.id===id; }); }).filter(Boolean);
       window._pickedCards = picked3;
+
+      // Show draw page
       showPage('draw');
-      document.getElementById('drawForm').style.display = 'none';
-      document.getElementById('drawResultWrap').style.display = 'block';
-      var labels = ['อดีต','ปัจจุบัน','อนาคต'];
-      document.getElementById('drawCards3').innerHTML = picked3.map(function(c,i){
-        return '<div style="display:flex;flex-direction:column;align-items:center;gap:10px">'
-          + '<p style="font-family:\'Cormorant Garamond\',serif;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim)">'+labels[i]+'</p>'
-          + '<div style="width:110px;height:176px;border-radius:8px;overflow:hidden;cursor:pointer" onclick="openModal('+c.id+')">'+(SVGS[c.id]||'')+'</div>'
-          + '<p style="font-family:\'Cinzel Decorative\',serif;font-size:.72rem;color:var(--gold2);text-align:center;max-width:110px">'+c.nameTH+'</p>'
-          + '</div>';
-      }).join('');
-      document.getElementById('predictionText').innerHTML = '<span style="color:var(--gold)">✅ ชำระเงินสำเร็จ</span>';
-      setTimeout(function(){ confirmPaymentDirect(picked3, userInfo); }, 800);
+
+      // Wait for DOM to update then show results
+      setTimeout(function() {
+        var drawForm = document.getElementById('drawForm');
+        var drawResult = document.getElementById('drawResultWrap');
+        if (drawForm) drawForm.style.display = 'none';
+        if (drawResult) drawResult.style.display = 'block';
+
+        var labels = ['อดีต','ปัจจุบัน','อนาคต'];
+        var cards3El = document.getElementById('drawCards3');
+        if (cards3El) {
+          cards3El.innerHTML = picked3.map(function(c,i){
+            return '<div style="display:flex;flex-direction:column;align-items:center;gap:10px;animation:fadeUp .5s ease '+(i*.18)+'s both">'
+              + '<p style="font-family:\'Cormorant Garamond\',serif;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim)">'+labels[i]+'</p>'
+              + '<div style="width:110px;height:176px;border-radius:8px;overflow:hidden;cursor:pointer" onclick="openModal('+c.id+')">'+(SVGS[c.id]||'')+'</div>'
+              + '<p style="font-family:\'Cinzel Decorative\',serif;font-size:.72rem;color:var(--gold2);text-align:center;max-width:110px">'+c.nameTH+'</p>'
+              + '</div>';
+          }).join('');
+        }
+
+        var predEl = document.getElementById('predictionText');
+        if (predEl) predEl.innerHTML = '<span style="color:var(--gold);font-size:1.1rem">✅ ชำระเงินสำเร็จ กำลังเปิดไพ่เชิงลึก...</span>';
+
+        // Trigger deep reading
+        setTimeout(function(){ confirmPaymentDirect(picked3, userInfo); }, 1000);
+      }, 300);
+
+      // Clean URL
       window.history.replaceState({}, '', '/');
     }
-  } catch(err) { console.error('Payment check error:', err); }
+  } catch(err) {
+    console.error('Payment check error:', err);
+  }
 }
 
 async function confirmPaymentDirect(picked3, info) {
@@ -877,7 +899,7 @@ async function confirmPaymentDirect(picked3, info) {
     var r2 = await fetch('/.netlify/functions/claude-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
     });
     var d2 = await r2.json();
     var deepText = d2.content && d2.content[0] ? d2.content[0].text : '';
@@ -991,7 +1013,7 @@ async function startReading() {
     + 'ข้อมูลผู้ถาม:\n- วันเกิด: '+dobStr+'\n- '+(time ? 'เวลา '+time+' น.' : 'ไม่ทราบเวลาเกิด')
     + '\n- เพศ: '+genderStr+'\n- '+(question ? 'คำถาม: "'+question+'"' : 'ไม่มีคำถามเฉพาะ')
     + '\n\nไพ่ 3 ใบ:\n'+cardDesc
-    + '\n\nเขียนคำทำนายภาษาไทยที่ลึกซึ้งและตรงไปตรงมา ราว 150-200 คำ เชื่อมพลังงานวันเกิดกับไพ่ทั้ง 3 ใบ อธิบายแต่ละใบ (อดีต/ปัจจุบัน/อนาคต) แล้วสรุปคำแนะนำ';
+    + '\n\nเขียนคำทำนายภาษาไทยที่ลึกซึ้งและตรงไปตรงมา ราว 250-300 คำ โดย:\n1. วิเคราะห์ไพ่อดีต — พลังงานในอดีตที่หล่อหลอมคุณ\n2. วิเคราะห์ไพ่ปัจจุบัน — สิ่งที่กำลังเกิดขึ้นในชีวิตตอนนี้\n3. วิเคราะห์ไพ่อนาคต — ทิศทางและโอกาสที่กำลังมา\n4. สรุปภาพรวม — เชื่อมทั้ง 3 ใบเข้าหากัน บอกว่าชะตาโดยรวมเป็นอย่างไร พร้อมคำแนะนำที่นำไปปฏิบัติได้จริง\nเขียนด้วยภาษาอบอุ่น ลึกซึ้ง เหมือนนักพยากรณ์นั่งคุยด้วยตรงๆ';
 
   var predEl = document.getElementById('predictionText');
   predEl.innerHTML = document.getElementById('loadingSpinner') ? document.getElementById('loadingSpinner').outerHTML : '';
@@ -1108,7 +1130,7 @@ async function confirmPayment() {
     + 'ข้อมูลผู้ถาม:\n- วันเกิด: '+(info.dob||'')+'\n- '+(info.time ? 'เวลา '+info.time+' น.' : 'ไม่ทราบเวลาเกิด')
     + '\n- เพศ: '+(info.gender||'')+'\n- '+(info.question ? 'คำถาม: "'+info.question+'"' : 'ไม่มีคำถามเฉพาะ')
     + '\n\nไพ่ทั้ง 5 ใบ:\n'+cardDesc
-    + '\n\nเขียนคำทำนายเชิงลึกภาษาไทย ราว 300 คำ วิเคราะห์ไพ่แต่ละใบอย่างละเอียด เชื่อมโยงพลังงานวันเกิด ให้คำแนะนำเชิงปฏิบัติ และปิดด้วยกำลังใจ';
+    + '\n\nเขียนคำทำนายเชิงลึกภาษาไทย ราว 500 คำ โดย:\n1. อดีต — พลังงานและเหตุการณ์ที่ผ่านมาที่ส่งผลถึงปัจจุบัน\n2. ปัจจุบัน — สิ่งที่กำลังเกิดขึ้น ความรู้สึกและสถานการณ์รอบข้าง\n3. อนาคต — ทิศทาง โอกาส และสิ่งที่กำลังจะมาถึง\n4. ความท้าทาย — อุปสรรคหรือสิ่งที่ต้องระวัง\n5. คำแนะนำ — แนวทางปฏิบัติที่ชัดเจนและนำไปใช้ได้จริง\n6. สรุปภาพรวมชะตา — เชื่อมทั้ง 5 ใบเข้าหากัน บอกภาพรวมของชีวิตในช่วงนี้ และข้อความกำลังใจที่ทรงพลัง\nเขียนด้วยภาษาอบอุ่น ลึกซึ้ง เหมือนนักพยากรณ์นั่งคุยด้วยตรงๆ ให้รู้สึกว่าไพ่รู้จักเขาจริงๆ';
 
   var predEl = document.getElementById('deepPredictionText');
   predEl.innerHTML = '<div style="display:flex;align-items:center;gap:12px;color:var(--muted)"><span style="animation:spin 1.2s linear infinite;display:inline-block">✦</span><span style="font-family:\'Cormorant Garamond\',serif;font-style:italic">กำลังอ่านลึก...</span></div>';
