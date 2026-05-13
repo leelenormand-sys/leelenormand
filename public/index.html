@@ -1068,29 +1068,27 @@ function buildPromptPayPayload(phone, amount) {
   return body + (crc & 0xFFFF).toString(16).toUpperCase().padStart(4,'0');
 }
 
-async function openPaymentModal() {
-  var btn = document.getElementById('btnPay');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ กำลังเชื่อมต่อ...'; }
+function openPaymentModal() {
+  document.getElementById('paymentModal').style.display = 'flex';
   try {
-    var picked3 = window._pickedCards || [];
-    var userInfo = window._userInfo || {};
-    var cardIds = picked3.map(function(c){ return c.id; });
-    var res = await fetch('/.netlify/functions/create-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cardIds: cardIds, userInfo: userInfo })
-    });
-    var data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
+    var payload = buildPromptPayPayload('0629563289', 99);
+    var canvas = document.getElementById('qrCanvas');
+    if (typeof QRCode !== 'undefined') {
+      if (window._qrInstance) window._qrInstance.clear();
+      window._qrInstance = new QRCode(canvas, {
+        text: payload, width: 180, height: 180,
+        colorDark: '#200e0e', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
     } else {
-      alert('เกิดข้อผิดพลาด: ' + (data.error || 'ไม่สามารถเชื่อมต่อได้'));
-      if (btn) { btn.disabled = false; btn.textContent = '🔮 ดูละเอียดขึ้น — 99 บาท'; }
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,180,180);
+      ctx.fillStyle = '#333'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('PromptPay', 90, 75);
+      ctx.fillText('0629563289', 90, 95);
+      ctx.fillText('99 บาท', 90, 115);
     }
-  } catch(err) {
-    alert('เกิดข้อผิดพลาด: ' + err.message);
-    if (btn) { btn.disabled = false; btn.textContent = '🔮 ดูละเอียดขึ้น — 99 บาท'; }
-  }
+  } catch(e) { console.log('QR error:', e); }
 }
 
 function closePaymentModal() {
