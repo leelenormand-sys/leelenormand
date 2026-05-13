@@ -1057,7 +1057,7 @@ function buildPromptPayPayload(phone, amount) {
   if (clean.startsWith('0')) clean = '0066' + clean.slice(1);
   var aid = '0016A000000677010111';
   var mobileTag = '0113' + clean;
-  var merchant  = '29' + String(aid.length + mobileTag.length + 4).padStart(2,'0') + aid + mobileTag;
+  var merchant  = '29' + String(aid.length + mobileTag.length).padStart(2,'0') + aid + mobileTag;
   var amountStr = amount ? '54' + String(amount.toFixed(2).length).padStart(2,'0') + amount.toFixed(2) : '';
   var body = '000201010212' + merchant + '5303764' + amountStr + '5802TH6304';
   var crc  = 0xFFFF;
@@ -1081,12 +1081,7 @@ function openPaymentModal() {
         correctLevel: QRCode.CorrectLevel.M
       });
     } else {
-      var ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,180,180);
-      ctx.fillStyle = '#333'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('PromptPay', 90, 75);
-      ctx.fillText('0629563289', 90, 95);
-      ctx.fillText('99 บาท', 90, 115);
+      canvas.innerHTML = '<p style="color:#333;text-align:center;padding:20px">PromptPay<br>0629563289<br>99 บาท</p>';
     }
   } catch(e) { console.log('QR error:', e); }
 }
