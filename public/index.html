@@ -1123,14 +1123,7 @@ async function confirmPayment() {
     + 'ข้อมูลผู้ถาม:\n- วันเกิด: '+(info.dob||'')+'\n- '+(info.time ? 'เวลา '+info.time+' น.' : 'ไม่ทราบเวลาเกิด')
     + '\n- เพศ: '+(info.gender||'')+'\n- '+(info.question ? 'คำถาม: "'+info.question+'"' : 'ไม่มีคำถามเฉพาะ')
     + '\n\nไพ่ทั้ง 5 ใบ:\n'+cardDesc
-    + '\n\nเขียนคำทำนายเชิงลึกภาษาไทย ราว 350 คำ โดยครอบคลุมครบทุกหัวข้อ:
-1. อดีต — 1-2 ประโยค
-2. ปัจจุบัน — 1-2 ประโยค
-3. อนาคต — 1-2 ประโยค
-4. ความท้าทาย — 1-2 ประโยค
-5. คำแนะนำ — 1-2 ประโยค
-6. สรุปภาพรวม — 2-3 ประโยค เชื่อมทั้ง 5 ใบ พร้อมกำลังใจ
-เขียนอบอุ่น ลึกซึ้ง ต้องมีครบทุกหัวข้อ ห้ามตัดทอน';
+    + '\n\nเขียนคำทำนายภาษาไทย ราว 350 คำ ครบทุกหัวข้อ:\n1. อดีต — 1-2 ประโยค\n2. ปัจจุบัน — 1-2 ประโยค\n3. อนาคต — 1-2 ประโยค\n4. ความท้าทาย — 1-2 ประโยค\n5. คำแนะนำ — 1-2 ประโยค\n6. สรุปภาพรวม — 2-3 ประโยค เชื่อมทั้ง 5 ใบ พร้อมกำลังใจ\nเขียนอบอุ่น ลึกซึ้ง ต้องมีครบทุกหัวข้อ ห้ามตัดทอน';
 
   var predEl = document.getElementById('deepPredictionText');
   predEl.innerHTML = '<div style="display:flex;align-items:center;gap:12px;color:var(--muted)"><span style="animation:spin 1.2s linear infinite;display:inline-block">✦</span><span style="font-family:\'Cormorant Garamond\',serif;font-style:italic">กำลังอ่านลึก...</span></div>';
