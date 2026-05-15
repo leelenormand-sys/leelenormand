@@ -563,10 +563,10 @@ footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-t
         <span style="font-size:1.4rem;flex-shrink:0">📧</span>
         <div><p style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:2px">อีเมล</p><p style="font-size:.95rem;color:var(--cream)">leelenormand@gmail.com</p></div>
       </div>
-      <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;background:rgba(201,168,76,.06);border-radius:10px;border:1px solid rgba(201,168,76,.12);text-align:left">
+      <a href="https://lin.ee/tc7vBod" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:16px;padding:16px 20px;background:rgba(201,168,76,.06);border-radius:10px;border:1px solid rgba(201,168,76,.12);text-align:left;text-decoration:none;cursor:pointer;transition:background .2s" onmouseover="this.style.background='rgba(201,168,76,.13)'" onmouseout="this.style.background='rgba(201,168,76,.06)'">
         <span style="font-size:1.4rem;flex-shrink:0">📱</span>
-        <div><p style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:2px">Line Official</p><p style="font-size:.95rem;color:var(--cream)">@leelenormand</p></div>
-      </div>
+        <div><p style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:2px">Line Official</p><p style="font-size:.95rem;color:var(--gold2);text-decoration:underline;text-underline-offset:3px">@leelenormand</p></div>
+      </a>
       <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;background:rgba(201,168,76,.06);border-radius:10px;border:1px solid rgba(201,168,76,.12);text-align:left">
         <span style="font-size:1.4rem;flex-shrink:0">🔮</span>
         <div><p style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:2px">นัดหมายอ่านไพ่</p><p style="font-size:.95rem;color:var(--cream)">จันทร์ – เสาร์ · 10:00 – 20:00</p></div>
@@ -1025,7 +1025,7 @@ async function startReading() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2000,
+        max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
